@@ -1,16 +1,17 @@
 # google_sps_flutter
 
-A new Flutter project.
+A Flutter project for google sps
 
-## Getting Started
+## Help for pull request
+1. git clone https://github.com/Cookiefan/google_sps_flutter.git
+2. cd google_sps_flutter
+3. do some change
+4. git add .
+5. git commit -m "~"
+6. git pull --rebase origin master
+7. git push origin master:<your name>
+Then follow the link to create a pull request, and invite a partner to review your PR
 
-This project is a starting point for a Flutter application.
+collaborator：
+qzq92900@126.com
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
