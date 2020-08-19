@@ -1,12 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
+import 'listPage.dart';
 
 class IOHttpUtils {
   //创建HttpClient
   HttpClient _httpClient = HttpClient();
+  List<Commodity> _dataList = [];
 
   //data请求用这个
-  getHttpClient() async {
+  sendHttpRequest() async {
     _httpClient
         .get('ymao-sps-summer20.appspot.com', 80, '/data/')
         .then((HttpClientRequest request) {
@@ -17,12 +19,21 @@ class IOHttpUtils {
       // 处理response响应
       if (response.statusCode == 200) {
         response.transform(utf8.decoder).join().then((String string) {
-          print(string);
+          _dataList.clear();
+          var rspData = jsonDecode(string);
+          for (var jsItem in rspData) {
+            _dataList.add(Commodity(jsItem['name'], jsItem['number']));
+          }
+          print("success");
         });
       } else {
         print("error");
       }
     });
+  }
+
+  List<Commodity> getResult() {
+    return _dataList;
   }
 
   getUrlHttpClient() async {
