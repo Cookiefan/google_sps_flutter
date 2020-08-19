@@ -17,13 +17,17 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class Commodity{
+class Commodity {
   String name;
   int quantity;
 
-  Commodity(String s, int q){
+  Commodity(String s, int q) {
     this.name = s;
     this.quantity = q;
+  }
+  @override
+  String toString() {
+    return 'Commodity{name: $name, quantity: $quantity}';
   }
 }
 
@@ -37,9 +41,11 @@ class _ListPageState extends State<ListPage> {
   final _normalFont = TextStyle(fontSize: 16.0);
   final _biggerFont = TextStyle(fontSize: 22.0);
 
-  void addNavigate(){
+  void addNavigate() {
     setState(() {
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context)=>OpenScene()), (route)=>route==null);
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (context) => OpenScene()),
+          (route) => route == null);
     });
   }
 
@@ -56,60 +62,63 @@ class _ListPageState extends State<ListPage> {
     _suggestions.add(Commodity("中性笔", 360));
     _suggestions.add(Commodity("鱼竿", 20));
     return Scaffold(
-      //appBar: AppBar(
+        //appBar: AppBar(
         //title: Text('库存列表'),
-      //),
-      body: _buildSuggestions(),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            child: Icon(Icons.add),
-            onPressed: addNavigate,
-            heroTag: null,
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          FloatingActionButton(
-            child: Icon(Icons.search),
-            onPressed: addNavigate,
-            heroTag: null,
-          )
-        ],
-      )
-    );
+        //),
+        body: _buildSuggestions(),
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              child: Icon(Icons.add),
+              onPressed: addNavigate,
+              heroTag: null,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            FloatingActionButton(
+              child: Icon(Icons.search),
+              onPressed: addNavigate,
+              heroTag: null,
+            )
+          ],
+        ));
   }
 
   Widget _buildSuggestions() {
     return SingleChildScrollView(
       child: Column(
-        children: List.generate(2 * _suggestions.length + 1, (index){
-          if (index == 0) return Stack(
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(left: 10.0),
-                height: MediaQuery.of(context).size.height * 0.3,
-                decoration: BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage('assets/storage.jpg'),
-                        fit: BoxFit.cover
-                    )
+        children: List.generate(2 * _suggestions.length + 1, (index) {
+          if (index == 0)
+            return Stack(
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(left: 10.0),
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  decoration: BoxDecoration(
+                      image: DecorationImage(
+                          image: AssetImage('assets/storage.jpg'),
+                          fit: BoxFit.cover)),
                 ),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height * 0.3,
-                padding: EdgeInsets.all(40.0),
-                width: MediaQuery.of(context).size.width,
-                decoration: BoxDecoration(
-                    color: Colors.blueGrey.withOpacity(0.5)
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.3,
+                  padding: EdgeInsets.all(40.0),
+                  width: MediaQuery.of(context).size.width,
+                  decoration:
+                      BoxDecoration(color: Colors.blueGrey.withOpacity(0.5)),
+                  child: Center(
+                    child: Text(
+                      'Inventory List',
+                      style: TextStyle(
+                          fontSize: 40,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700),
+                    ),
+                  ),
                 ),
-                child: Center(
-                  child: Text('Inventory List', style: TextStyle(fontSize: 40, color: Colors.white, fontWeight: FontWeight.w700),),
-                ),
-              ),
-            ],
-          );
+              ],
+            );
           if (index.isOdd) return Divider();
           return _buildRow(_suggestions[index ~/ 2 - 1]);
         }),
@@ -124,20 +133,25 @@ class _ListPageState extends State<ListPage> {
           final index = i ~/ 2; /*3*/
           return _buildRow(_suggestions[index]);
         });
-
   }
 
   Widget _buildRow(Commodity commodity) {
     return InkWell(
-        child: Card(
-          child: ListTile(
-            leading: FlutterLogo(size: 56.0),
-            title: Text(commodity.name, style: _biggerFont,),
-            subtitle: Text('库存件数：' + commodity.quantity.toString(), style: _normalFont,),
-            trailing: Icon(Icons.arrow_forward_ios),
+      child: Card(
+        child: ListTile(
+          leading: FlutterLogo(size: 56.0),
+          title: Text(
+            commodity.name,
+            style: _biggerFont,
           ),
+          subtitle: Text(
+            '库存件数：' + commodity.quantity.toString(),
+            style: _normalFont,
+          ),
+          trailing: Icon(Icons.arrow_forward_ios),
         ),
-        /*ListTile(
+      ),
+      /*ListTile(
           onTap: () {
             //Scaffold.of(context).showSnackBar(SnackBar(
             //  content: Text('Tap'),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
-import 'openScene.dart';
+import 'http_util.dart';
 
 void main() => runApp(MyApp());
 
@@ -40,7 +39,8 @@ class _SearchBarState extends State<SearchBar> {
 
 class SearchBarDelegate extends SearchDelegate<String> {
   final recentList = [];
-  final searchList = ['haha'];
+  final searchList = [];
+  IOHttpUtils _ioHttpUtils = new IOHttpUtils();
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -82,6 +82,14 @@ class SearchBarDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    _ioHttpUtils.sendHttpRequest();
+    var resultList = _ioHttpUtils.getResult();
+    searchList.clear();
+    for (var result in resultList) {
+      searchList.add(result.name);
+    }
+    print(resultList);
+
     final suggestionList = query.isEmpty
         ? recentList
         : searchList.where((input) => input.contains(query)).toList();
