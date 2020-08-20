@@ -6,8 +6,9 @@ List recentList = [];
 List searchList = [];
 IOHttpUtils _ioHttpUtils = new IOHttpUtils();
 
-getAllData() {
-  _ioHttpUtils.sendDataRequest();
+getAllData() async {
+  _ioHttpUtils.sendDataGet();
+  print("get all data!");
   var resultList = _ioHttpUtils.getDataList();
   searchList.clear();
   for (var result in resultList) {
@@ -42,6 +43,7 @@ class _SearchBarState extends State<SearchBar> {
             icon: Icon(Icons.search),
             onPressed: () {
               getAllData();
+              print("search_list:$searchList");
               showSearch(context: context, delegate: SearchBarDelegate());
             },
           ),
