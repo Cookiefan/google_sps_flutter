@@ -4,6 +4,7 @@
 
 import 'package:flutter/material.dart';
 import 'openScene.dart';
+import 'commodity.dart';
 
 void main() => runApp(MyApp());
 
@@ -14,20 +15,6 @@ class MyApp extends StatelessWidget {
       title: '库存管理系统',
       home: OpenScene(),
     );
-  }
-}
-
-class Commodity {
-  String name;
-  int quantity;
-
-  Commodity(String s, int q) {
-    this.name = s;
-    this.quantity = q;
-  }
-  @override
-  String toString() {
-    return 'Commodity{name: $name, quantity: $quantity}';
   }
 }
 
