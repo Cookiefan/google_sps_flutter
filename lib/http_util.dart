@@ -1,16 +1,51 @@
 import 'dart:convert';
 import 'dart:io';
-import 'listPage.dart';
+import 'commodity.dart' show Commodity;
 
 class IOHttpUtils {
   //创建HttpClient
-  HttpClient _httpClient = HttpClient();
-  List<Commodity> _dataList = [];
+  List<Map> _dataList = [];
+  var _searchList = [];
 
-  //data请求用这个
-  sendHttpRequest() async {
+  getDataList() {
+    return _dataList;
+  }
+
+  getSearchList() {
+    return _searchList;
+  }
+
+  // 发送data的http请求，请求结果json会放到_dataList中，调用getDataList()方法获取
+  sendDataRequest() async {
+    HttpClient _httpClient = HttpClient();
+    var url = "https://ymao-sps-summer20.appspot.com/data/";
+    _httpClient.getUrl(Uri.parse(url)).then((HttpClientRequest request) {
+      return request.close();
+    }).then((HttpClientResponse response) {
+      if (response.statusCode == 200) {
+        response.transform(utf8.decoder).join().then((String string) {
+          print("get data success!");
+          return json.decode(string);
+        }).then((rspData) {
+          assert(rspData is List);
+          _dataList.clear();
+          for (var item in rspData) {
+            assert(item is Map);
+            _dataList.add(item);
+          }
+          print(_dataList);
+        });
+      } else {
+        print("error");
+      }
+    });
+  }
+
+  //search请求用这个
+  sendSearchRequest() async {
+    HttpClient _httpClient = HttpClient();
     _httpClient
-        .get('ymao-sps-summer20.appspot.com', 80, '/data/')
+        .get('ymao-sps-summer20.appspot.com', 80, '/search')
         .then((HttpClientRequest request) {
       //在这里可以对request请求添加headers操作，写入请求对象数据等等
       // Then call close.
@@ -20,11 +55,7 @@ class IOHttpUtils {
       if (response.statusCode == 200) {
         response.transform(utf8.decoder).join().then((String string) {
           _dataList.clear();
-          var rspData = jsonDecode(string);
-          for (var jsItem in rspData) {
-            _dataList.add(Commodity(jsItem['name'], jsItem['number']));
-          }
-          print("success");
+          // print("success");
         });
       } else {
         print("error");
@@ -32,22 +63,22 @@ class IOHttpUtils {
     });
   }
 
-  List<Commodity> getResult() {
-    return _dataList;
-  }
-
-  getUrlHttpClient() async {
-    var url = "https://ymao-sps-summer20.appspot.com/data";
-    _httpClient.getUrl(Uri.parse(url)).then((HttpClientRequest request) {
-      // Optionally set up headers...
-      // Optionally write to the request object...
-      // Then call close.
+  //添加库存用这个
+  postUrlHttpClient() async {
+    HttpClient _httpClient = HttpClient();
+    var url = "https://ymao-sps-summer20.appspot.com/add";
+    _httpClient.postUrl(Uri.parse(url)).then((HttpClientRequest request) {
+      //这里添加POST请求Body的ContentType和内容
+      //这个是application/x-www-form-urlencoded数据类型的传输方式
+      request.headers.contentType =
+          ContentType("application", "x-www-form-urlencoded");
+      request.write("item_id=5631671361601536&number=100");
       return request.close();
     }).then((HttpClientResponse response) {
       // Process the response.
-      if (response.statusCode == 200) {
+      if (response.statusCode == 302) {
         response.transform(utf8.decoder).join().then((String string) {
-          print(string);
+          print("add success!");
         });
       } else {
         print("error");
@@ -77,33 +108,5 @@ class IOHttpUtils {
   //     }
   //   });
   // }
-
-  //添加库存用这个
-  postUrlHttpClient() async {
-    var url = "https://ymao-sps-summer20.appspot.com/add";
-    _httpClient.postUrl(Uri.parse(url)).then((HttpClientRequest request) {
-      //这里添加POST请求Body的ContentType和内容
-      //这个是application/x-www-form-urlencoded数据类型的传输方式
-      request.headers.contentType =
-          ContentType("application", "x-www-form-urlencoded");
-      request.write("item_id=5631671361601536&number=100");
-      return request.close();
-    }).then((HttpClientResponse response) {
-      // Process the response.
-      if (response.statusCode == 302) {
-        response.transform(utf8.decoder).join().then((String string) {
-          print("add success!");
-        });
-      } else {
-        print("error");
-      }
-    });
-  }
-
-  ///其余的HEAD、PUT、DELETE请求用法类似，大同小异，大家可以自己试一下
-  ///在Widget里请求成功数据后，使用setState来更新内容和状态即可
-  ///setState(() {
-  ///    ...
-  ///  });
 
 }

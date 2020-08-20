@@ -2,6 +2,18 @@ import 'package:flutter/material.dart';
 import 'http_util.dart';
 
 void main() => runApp(MyApp());
+List recentList = [];
+List searchList = [];
+IOHttpUtils _ioHttpUtils = new IOHttpUtils();
+
+getAllData() {
+  _ioHttpUtils.sendDataRequest();
+  var resultList = _ioHttpUtils.getDataList();
+  searchList.clear();
+  for (var result in resultList) {
+    searchList.add(result["name"]);
+  }
+}
 
 class MyApp extends StatelessWidget {
   @override
@@ -21,6 +33,7 @@ class SearchBar extends StatefulWidget {
 class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
+    print("build");
     return Scaffold(
       appBar: AppBar(
         title: Text('SearchBar'),
@@ -28,6 +41,7 @@ class _SearchBarState extends State<SearchBar> {
           IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
+              getAllData();
               showSearch(context: context, delegate: SearchBarDelegate());
             },
           ),
@@ -38,19 +52,12 @@ class _SearchBarState extends State<SearchBar> {
 }
 
 class SearchBarDelegate extends SearchDelegate<String> {
-  final recentList = [];
-  final searchList = [];
-  IOHttpUtils _ioHttpUtils = new IOHttpUtils();
-
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
         icon: Icon(Icons.clear),
-        onPressed: () {
-          query = "";
-          // showSuggestions(context);
-        },
+        onPressed: () => query = "",
       )
     ];
   }
@@ -82,14 +89,6 @@ class SearchBarDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    _ioHttpUtils.sendHttpRequest();
-    var resultList = _ioHttpUtils.getResult();
-    searchList.clear();
-    for (var result in resultList) {
-      searchList.add(result.name);
-    }
-    print(resultList);
-
     final suggestionList = query.isEmpty
         ? recentList
         : searchList.where((input) => input.contains(query)).toList();
