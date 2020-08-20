@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapp2/commodity.dart';
 import 'http_util.dart';
+import 'detailPage.dart';
 
 void main() => runApp(MyApp());
 List recentList = [];
 List searchList = [];
+List resultList = [];
+Map resultMap = {};
 IOHttpUtils _ioHttpUtils = new IOHttpUtils();
 
 getAllData() async {
-  _ioHttpUtils.sendDataGet();
+  await _ioHttpUtils.sendDataGet();
   print("get all data!");
   var resultList = _ioHttpUtils.getDataList();
   searchList.clear();
   for (var result in resultList) {
     searchList.add(result["name"]);
+    resultMap[result["name"]] = Commodity(result["name"], result["number"]);
   }
 }
 
@@ -34,7 +39,6 @@ class SearchBar extends StatefulWidget {
 class _SearchBarState extends State<SearchBar> {
   @override
   Widget build(BuildContext context) {
-    print("build");
     return Scaffold(
       appBar: AppBar(
         title: Text('SearchBar'),
@@ -83,10 +87,20 @@ class SearchBarDelegate extends SearchDelegate<String> {
   @override
   Widget buildResults(BuildContext context) {
     return Container(
+        child: GestureDetector(
       child: Center(
         child: Text("$query"),
       ),
-    );
+      onTap: () {
+        print("$query");
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DetailPage(
+                      detailData: Commodity('abc', 1),
+                    )));
+      },
+    ));
   }
 
   @override
@@ -112,7 +126,14 @@ class SearchBarDelegate extends SearchDelegate<String> {
           onTap: () {
             query = suggestionList[index];
             if (!recentList.contains(query)) recentList.add(query);
-            Scaffold.of(context).showSnackBar(SnackBar(content: Text(query)));
+            print("query: $query");
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => DetailPage(
+                          detailData: resultMap[query],
+                        )));
+            // Scaffold.of(context).showSnackBar(SnackBar(content: Text(query)));
           },
         );
       },
