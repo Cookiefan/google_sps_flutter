@@ -19,7 +19,7 @@ class IOHttpUtils {
   sendDataGet() async {
     HttpClient _httpClient = HttpClient();
     var url = "https://ymao-sps-summer20.appspot.com/data/";
-    _httpClient.getUrl(Uri.parse(url)).then((HttpClientRequest request) {
+    return await _httpClient.getUrl(Uri.parse(url)).then((HttpClientRequest request) {
       return request.close();
     }).then((HttpClientResponse response) {
       if (response.statusCode == 200) {
@@ -86,7 +86,7 @@ class IOHttpUtils {
     });
   }
 
-  sendDataPost(String name, int number, int price) async {
+  sendDataPost(String name, int number, double price) async {
     HttpClient _httpClient = HttpClient();
     var url = "https://ymao-sps-summer20.appspot.com/data/";
     _httpClient.postUrl(Uri.parse(url)).then((HttpClientRequest request) {
@@ -103,32 +103,33 @@ class IOHttpUtils {
           print("add success!");
         });
       } else {
+        print(response.statusCode);
         print("error");
       }
     });
   }
 
-  //进行POST请求
-  // postHttpClient() async {
-  //   _httpClient
-  //       .post('ymao-sps-summer20.appspot.com', 80, '/add')
-  //       .then((HttpClientRequest request) {
-  //     //这里添加POST请求Body的ContentType和内容
-  //     //这个是application/json数据类型的传输方式
-  //     request.headers.contentType = ContentType("application", "json");
-  //     request.write("{\"item_id\":5631671361601536,\"number\":12}");
-  //     return request.close();
-  //   }).then((HttpClientResponse response) {
-  //     // Process the response.
-  //     print("!!");
-  //     if (response.statusCode == 200) {
-  //       response.transform(utf8.decoder).join().then((String string) {
-  //         print(string);
-  //       });
-  //     } else {
-  //       print("error");
-  //     }
-  //   });
-  // }
+//进行POST请求
+// postHttpClient() async {
+//   _httpClient
+//       .post('ymao-sps-summer20.appspot.com', 80, '/add')
+//       .then((HttpClientRequest request) {
+//     //这里添加POST请求Body的ContentType和内容
+//     //这个是application/json数据类型的传输方式
+//     request.headers.contentType = ContentType("application", "json");
+//     request.write("{\"item_id\":5631671361601536,\"number\":12}");
+//     return request.close();
+//   }).then((HttpClientResponse response) {
+//     // Process the response.
+//     print("!!");
+//     if (response.statusCode == 200) {
+//       response.transform(utf8.decoder).join().then((String string) {
+//         print(string);
+//       });
+//     } else {
+//       print("error");
+//     }
+//   });
+// }
 
 }
