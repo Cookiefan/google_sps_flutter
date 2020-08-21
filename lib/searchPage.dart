@@ -88,19 +88,19 @@ class SearchBarDelegate extends SearchDelegate<String> {
   Widget buildResults(BuildContext context) {
     return Container(
         child: GestureDetector(
-      child: Center(
-        child: Text("$query"),
-      ),
-      onTap: () {
-        print("$query");
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => DetailPage(
+          child: Center(
+            child: Text("$query"),
+          ),
+          onTap: () {
+            print("$query");
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => DetailPage(
                       detailData: Commodity('abc', 1),
                     )));
-      },
-    ));
+          },
+        ));
   }
 
   @override
@@ -115,14 +115,14 @@ class SearchBarDelegate extends SearchDelegate<String> {
         return ListTile(
           title: RichText(
               text: TextSpan(
-            text: suggestionList[index].substring(0, query.length),
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-            children: [
-              TextSpan(
-                  text: suggestionList[index].substring(query.length),
-                  style: TextStyle(color: Colors.grey))
-            ],
-          )),
+                text: suggestionList[index].substring(0, query.length),
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                children: [
+                  TextSpan(
+                      text: suggestionList[index].substring(query.length),
+                      style: TextStyle(color: Colors.grey))
+                ],
+              )),
           onTap: () {
             query = suggestionList[index];
             if (!recentList.contains(query)) recentList.add(query);
@@ -131,8 +131,8 @@ class SearchBarDelegate extends SearchDelegate<String> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => DetailPage(
-                          detailData: resultMap[query],
-                        )));
+                      detailData: resultMap[query],
+                    )));
             // Scaffold.of(context).showSnackBar(SnackBar(content: Text(query)));
           },
         );

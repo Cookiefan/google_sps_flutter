@@ -5,8 +5,13 @@
 import 'package:flutter/material.dart';
 import 'openScene.dart';
 import 'commodity.dart';
+import 'http_util.dart';
+import 'addPage.dart';
+import 'searchPage.dart';
+import 'detailPage.dart';
 
 void main() => runApp(MyApp());
+IOHttpUtils _ioHttpUtils = new IOHttpUtils();
 
 class MyApp extends StatelessWidget {
   @override
@@ -30,29 +35,47 @@ class _ListPageState extends State<ListPage> {
 
   void addNavigate() {
     setState(() {
-      Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => OpenScene()),
-          (route) => route == null);
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => AddPage()));
+
+    });
+  }
+
+  void searchNavigate(){
+    setState(() {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => SearchBar()));
+
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    _suggestions.clear();
-    _suggestions.add(Commodity("book", 3));
-    _suggestions.add(Commodity("apple", 16));
-    _suggestions.add(Commodity("map", 35));
-    _suggestions.add(Commodity("字典", 13));
-    _suggestions.add(Commodity("雨伞", 240));
-    _suggestions.add(Commodity("相机", 36));
-    _suggestions.add(Commodity("椅子", 29));
-    _suggestions.add(Commodity("中性笔", 360));
-    _suggestions.add(Commodity("鱼竿", 20));
+    //Future<int> result = _ioHttpUtils.sendDataRequest();
+    Future<String> _calculation = Future<String>.delayed(
+      Duration(seconds: 2),
+          () => 'Data Loaded',
+    );
     return Scaffold(
-        //appBar: AppBar(
-        //title: Text('库存列表'),
-        //),
-        body: _buildSuggestions(),
+      //appBar: AppBar(
+      //title: Text('库存列表'),
+      //),
+        body: FutureBuilder(
+          future: _ioHttpUtils.sendDataGet(),
+          builder: (context, snapshot){
+            if (snapshot.connectionState == ConnectionState.done){
+              var resultList = _ioHttpUtils.getDataList();
+              _suggestions.clear();
+              for (var commodity in resultList){
+                _suggestions.add(Commodity(commodity["name"], commodity["number"]));
+              }
+              return _buildList();
+            }
+            else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
         floatingActionButton: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -66,14 +89,24 @@ class _ListPageState extends State<ListPage> {
             ),
             FloatingActionButton(
               child: Icon(Icons.search),
-              onPressed: addNavigate,
+              onPressed: searchNavigate,
+              heroTag: null,
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            FloatingActionButton(
+              child: Icon(Icons.refresh),
+              onPressed: () {_ioHttpUtils.sendDataGet(); setState(() {
+
+              });},
               heroTag: null,
             )
           ],
         ));
   }
 
-  Widget _buildSuggestions() {
+  Widget _buildList() {
     return SingleChildScrollView(
       child: Column(
         children: List.generate(2 * _suggestions.length + 1, (index) {
@@ -93,7 +126,7 @@ class _ListPageState extends State<ListPage> {
                   padding: EdgeInsets.all(40.0),
                   width: MediaQuery.of(context).size.width,
                   decoration:
-                      BoxDecoration(color: Colors.blueGrey.withOpacity(0.5)),
+                  BoxDecoration(color: Colors.blueGrey.withOpacity(0.5)),
                   child: Center(
                     child: Text(
                       'Inventory List',
@@ -125,7 +158,7 @@ class _ListPageState extends State<ListPage> {
   Widget _buildRow(Commodity commodity) {
     return InkWell(
       child: Card(
-        child: ListTile(
+        child:ListTile(
           leading: FlutterLogo(size: 56.0),
           title: Text(
             commodity.name,
@@ -136,6 +169,7 @@ class _ListPageState extends State<ListPage> {
             style: _normalFont,
           ),
           trailing: Icon(Icons.arrow_forward_ios),
+          onTap: () {Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailPage(detailData: commodity)));},
         ),
       ),
       /*ListTile(
