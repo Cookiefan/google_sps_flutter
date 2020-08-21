@@ -19,7 +19,9 @@ class IOHttpUtils {
   sendDataGet() async {
     HttpClient _httpClient = HttpClient();
     var url = "https://ymao-sps-summer20.appspot.com/data/";
-    return await _httpClient.getUrl(Uri.parse(url)).then((HttpClientRequest request) {
+    return await _httpClient
+        .getUrl(Uri.parse(url))
+        .then((HttpClientRequest request) {
       return request.close();
     }).then((HttpClientResponse response) {
       if (response.statusCode == 200) {

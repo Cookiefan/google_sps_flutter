@@ -35,17 +35,15 @@ class _ListPageState extends State<ListPage> {
 
   void addNavigate() {
     setState(() {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => AddPage()));
-
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => AddPage()));
     });
   }
 
-  void searchNavigate(){
+  void searchNavigate() {
     setState(() {
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => SearchBar()));
-
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => SearchBar()));
     });
   }
 
@@ -54,24 +52,24 @@ class _ListPageState extends State<ListPage> {
     //Future<int> result = _ioHttpUtils.sendDataRequest();
     Future<String> _calculation = Future<String>.delayed(
       Duration(seconds: 2),
-          () => 'Data Loaded',
+      () => 'Data Loaded',
     );
     return Scaffold(
-      //appBar: AppBar(
-      //title: Text('库存列表'),
-      //),
+        //appBar: AppBar(
+        //title: Text('库存列表'),
+        //),
         body: FutureBuilder(
           future: _ioHttpUtils.sendDataGet(),
-          builder: (context, snapshot){
-            if (snapshot.connectionState == ConnectionState.done){
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
               var resultList = _ioHttpUtils.getDataList();
               _suggestions.clear();
-              for (var commodity in resultList){
-                _suggestions.add(Commodity(commodity["name"], commodity["number"]));
+              for (var commodity in resultList) {
+                _suggestions
+                    .add(Commodity(commodity["name"], commodity["number"]));
               }
               return _buildList();
-            }
-            else {
+            } else {
               return Center(child: CircularProgressIndicator());
             }
           },
@@ -97,9 +95,10 @@ class _ListPageState extends State<ListPage> {
             ),
             FloatingActionButton(
               child: Icon(Icons.refresh),
-              onPressed: () {_ioHttpUtils.sendDataGet(); setState(() {
-
-              });},
+              onPressed: () {
+                _ioHttpUtils.sendDataGet();
+                setState(() {});
+              },
               heroTag: null,
             )
           ],
@@ -126,7 +125,7 @@ class _ListPageState extends State<ListPage> {
                   padding: EdgeInsets.all(40.0),
                   width: MediaQuery.of(context).size.width,
                   decoration:
-                  BoxDecoration(color: Colors.blueGrey.withOpacity(0.5)),
+                      BoxDecoration(color: Colors.blueGrey.withOpacity(0.5)),
                   child: Center(
                     child: Text(
                       'Inventory List',
@@ -158,7 +157,7 @@ class _ListPageState extends State<ListPage> {
   Widget _buildRow(Commodity commodity) {
     return InkWell(
       child: Card(
-        child:ListTile(
+        child: ListTile(
           leading: FlutterLogo(size: 56.0),
           title: Text(
             commodity.name,
@@ -169,7 +168,10 @@ class _ListPageState extends State<ListPage> {
             style: _normalFont,
           ),
           trailing: Icon(Icons.arrow_forward_ios),
-          onTap: () {Navigator.of(context).push(MaterialPageRoute(builder: (context) => DetailPage(detailData: commodity)));},
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => DetailPage(detailData: commodity)));
+          },
         ),
       ),
       /*ListTile(
