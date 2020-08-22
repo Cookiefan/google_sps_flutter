@@ -9,6 +9,7 @@ import 'http_util.dart';
 import 'addPage.dart';
 import 'searchPage.dart';
 import 'detailPage.dart';
+import 'dart:io';
 
 void main() => runApp(MyApp());
 IOHttpUtils _ioHttpUtils = new IOHttpUtils();
@@ -52,10 +53,7 @@ class _ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     //Future<int> result = _ioHttpUtils.sendDataRequest();
-    Future<String> _calculation = Future<String>.delayed(
-      Duration(seconds: 2),
-          () => 'Data Loaded',
-    );
+
     return Scaffold(
       //appBar: AppBar(
       //title: Text('库存列表'),
@@ -97,7 +95,7 @@ class _ListPageState extends State<ListPage> {
             ),
             FloatingActionButton(
               child: Icon(Icons.refresh),
-              onPressed: () {_ioHttpUtils.sendDataGet(); setState(() {
+              onPressed: () { _ioHttpUtils.getDataList(); setState(() {
 
               });},
               heroTag: null,

@@ -19,7 +19,7 @@ class IOHttpUtils {
   sendDataGet() async {
     HttpClient _httpClient = HttpClient();
     var url = "https://ymao-sps-summer20.appspot.com/data/";
-    return await _httpClient.getUrl(Uri.parse(url)).then((HttpClientRequest request) {
+    await _httpClient.getUrl(Uri.parse(url)).then((HttpClientRequest request) {
       return request.close();
     }).then((HttpClientResponse response) {
       if (response.statusCode == 200) {
@@ -33,11 +33,11 @@ class IOHttpUtils {
             assert(item is Map);
             _dataList.add(item);
           }
-          print(_dataList);
         });
       } else {
         print("error");
       }
+      return _dataList;
     });
   }
 
@@ -89,7 +89,7 @@ class IOHttpUtils {
   sendDataPost(String name, int number, double price) async {
     HttpClient _httpClient = HttpClient();
     var url = "https://ymao-sps-summer20.appspot.com/data/";
-    _httpClient.postUrl(Uri.parse(url)).then((HttpClientRequest request) {
+    await _httpClient.postUrl(Uri.parse(url)).then((HttpClientRequest request) {
       //这里添加POST请求Body的ContentType和内容
       //这个是application/x-www-form-urlencoded数据类型的传输方式
       request.headers.contentType =
@@ -101,11 +101,14 @@ class IOHttpUtils {
       if (response.statusCode == 302) {
         response.transform(utf8.decoder).join().then((String string) {
           print("add success!");
+          return true;
         });
       } else {
         print(response.statusCode);
         print("error");
+        return false;
       }
+      return true;
     });
   }
 

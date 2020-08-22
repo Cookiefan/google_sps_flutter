@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutterapp2/listPage.dart';
 import 'commodity.dart';
 import 'http_util.dart';
+import 'dart:io';
 
 class AddPage extends StatefulWidget{
   @override
@@ -18,6 +20,7 @@ class _AddPageState extends State<AddPage> with SingleTickerProviderStateMixin{
 
   double _scale;
   AnimationController _controller;
+  bool uploading = false;
 
   @override
   void initState() {
@@ -209,7 +212,7 @@ class _AddPageState extends State<AddPage> with SingleTickerProviderStateMixin{
 
   Widget get _animatedButtonUI => Container(
     height: 50,
-    width: 150,
+    width: MediaQuery.of(context).size.width * 0.95 - 60,
     decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(100.0),
         boxShadow: [
@@ -224,12 +227,12 @@ class _AddPageState extends State<AddPage> with SingleTickerProviderStateMixin{
           end: Alignment.bottomRight,
           colors: [
             Colors.blue,
-            Colors.blue[100],
+            Colors.blue,
           ],
         )),
     child: Center(
       child: Text(
-        'submit',
+        uploading ? 'Uploading...' : 'submit',
         style: TextStyle(
             fontSize: 25.0,
             fontWeight: FontWeight.bold,
@@ -238,10 +241,17 @@ class _AddPageState extends State<AddPage> with SingleTickerProviderStateMixin{
     ),
   );
 
-  void _onTapDown(TapDownDetails details) async {
+  _onTapDown(TapDownDetails details) async {
     _controller.forward();
-    await _ioHttpUtils.sendDataPost(_controllerName.text, int.parse(_controllerQuantity.text), double.parse(_controllerPrice.text));
-    Navigator.of(context).pop();
+    setState(() {
+      uploading = true;
+    });
+    _ioHttpUtils.sendDataPost(_controllerName.text, int.parse(_controllerQuantity.text), double.parse(_controllerPrice.text)).then((_result){
+      print("onTapDown finished");
+      sleep(const Duration(milliseconds: 1000));
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => ListPage()));
+    });
+
   }
 
   void _onTapUp(TapUpDetails details) {
