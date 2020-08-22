@@ -6,19 +6,22 @@ import 'detailPage.dart';
 void main() => runApp(MyApp());
 List recentList = [];
 List searchList = [];
-List resultList = [];
+var resultList = [];
 Map resultMap = {};
 IOHttpUtils _ioHttpUtils = new IOHttpUtils();
 
 getAllData() async {
   await _ioHttpUtils.sendDataGet();
-  print("get all data!");
-  var resultList = _ioHttpUtils.getDataList();
+  resultList = _ioHttpUtils.getDataList();
+}
+
+updateData() {
   searchList.clear();
   for (var result in resultList) {
     searchList.add(result["name"]);
     resultMap[result["name"]] = Commodity(result["name"], result["number"]);
   }
+  print("search: $searchList");
 }
 
 class MyApp extends StatelessWidget {
@@ -47,7 +50,6 @@ class _SearchBarState extends State<SearchBar> {
             icon: Icon(Icons.search),
             onPressed: () {
               getAllData();
-              print("search_list:$searchList");
               showSearch(context: context, delegate: SearchBarDelegate());
             },
           ),
@@ -88,23 +90,24 @@ class SearchBarDelegate extends SearchDelegate<String> {
   Widget buildResults(BuildContext context) {
     return Container(
         child: GestureDetector(
-          child: Center(
-            child: Text("$query"),
-          ),
-          onTap: () {
-            print("$query");
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => DetailPage(
+      child: Center(
+        child: Text("$query"),
+      ),
+      onTap: () {
+        print("$query");
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => DetailPage(
                       detailData: Commodity('abc', 1),
                     )));
-          },
-        ));
+      },
+    ));
   }
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    updateData();
     final suggestionList = query.isEmpty
         ? recentList
         : searchList.where((input) => input.contains(query)).toList();
@@ -115,14 +118,14 @@ class SearchBarDelegate extends SearchDelegate<String> {
         return ListTile(
           title: RichText(
               text: TextSpan(
-                text: suggestionList[index].substring(0, query.length),
-                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-                children: [
-                  TextSpan(
-                      text: suggestionList[index].substring(query.length),
-                      style: TextStyle(color: Colors.grey))
-                ],
-              )),
+            text: suggestionList[index].substring(0, query.length),
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+            children: [
+              TextSpan(
+                  text: suggestionList[index].substring(query.length),
+                  style: TextStyle(color: Colors.grey))
+            ],
+          )),
           onTap: () {
             query = suggestionList[index];
             if (!recentList.contains(query)) recentList.add(query);
@@ -131,8 +134,8 @@ class SearchBarDelegate extends SearchDelegate<String> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => DetailPage(
-                      detailData: resultMap[query],
-                    )));
+                          detailData: resultMap[query],
+                        )));
             // Scaffold.of(context).showSnackBar(SnackBar(content: Text(query)));
           },
         );

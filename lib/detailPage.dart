@@ -26,14 +26,21 @@ class _DetailPageState extends State<DetailPage> {
         appBar: AppBar(
           title: Text("Detail"),
         ),
-        body: ListView(padding: const EdgeInsets.all(16.0), children: <Widget>[
-          Container(
-            child: Center(child: Text("name: ${detailData.name}")),
+        body: Column(children: <Widget>[
+          Text("name: ${detailData.name}",
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+          Text("number: ${detailData.quantity.toString()}",
+              textAlign: TextAlign.center,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24)),
+          Expanded(
+            child: FittedBox(
+              fit: BoxFit.contain, // otherwise the logo will be tiny
+              child: const FlutterLogo(),
+            ),
           ),
-          Container(
-            child: Center(
-                child: Text("number: ${detailData.quantity.toString()}")),
-          )
         ]));
   }
 }
