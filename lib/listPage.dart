@@ -30,6 +30,7 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
+  var resultList;
   final _suggestions = <Commodity>[];
   final _normalFont = TextStyle(fontSize: 16.0);
   final _biggerFont = TextStyle(fontSize: 22.0);
@@ -38,13 +39,6 @@ class _ListPageState extends State<ListPage> {
     setState(() {
       Navigator.push(
           context, MaterialPageRoute(builder: (context) => AddPage()));
-    });
-  }
-
-  void searchNavigate() {
-    setState(() {
-      Navigator.push(
-          context, MaterialPageRoute(builder: (context) => SearchBar()));
     });
   }
 
@@ -61,7 +55,7 @@ class _ListPageState extends State<ListPage> {
                 snapshot.hasData &&
                 snapshot.data != null) {
               print("done");
-              var resultList = _ioHttpUtils.getDataList();
+              resultList = _ioHttpUtils.getDataList();
               _suggestions.clear();
               for (var commodity in resultList) {
                 _suggestions
@@ -86,7 +80,10 @@ class _ListPageState extends State<ListPage> {
             ),
             FloatingActionButton(
               child: Icon(Icons.search),
-              onPressed: searchNavigate,
+              onPressed: () {
+                showSearch(
+                    context: context, delegate: SearchBarDelegate(resultList));
+              },
               heroTag: null,
             ),
             SizedBox(
