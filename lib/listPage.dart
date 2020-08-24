@@ -154,7 +154,7 @@ class _ListPageState extends State<ListPage> {
     return InkWell(
       child: Card(
         child: ListTile(
-          leading: FlutterLogo(size: 56.0),
+          image: AssetImage('assets/' + commodity.name + '.jpg'),
           title: Text(
             commodity.name,
             style: _biggerFont,
