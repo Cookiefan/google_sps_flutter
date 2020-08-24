@@ -57,7 +57,8 @@ class _ListPageState extends State<ListPage> {
         body: FutureBuilder(
           future: _ioHttpUtils.sendDataGet(),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+              print("done");
               var resultList = _ioHttpUtils.getDataList();
               _suggestions.clear();
               for (var commodity in resultList) {
