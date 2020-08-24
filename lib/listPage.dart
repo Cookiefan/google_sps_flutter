@@ -57,7 +57,9 @@ class _ListPageState extends State<ListPage> {
         body: FutureBuilder(
           future: _ioHttpUtils.sendDataGet(),
           builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
+            if (snapshot.connectionState == ConnectionState.done &&
+                snapshot.hasData &&
+                snapshot.data != null) {
               print("done");
               var resultList = _ioHttpUtils.getDataList();
               _suggestions.clear();
@@ -153,27 +155,26 @@ class _ListPageState extends State<ListPage> {
 
   Widget _buildRow(Commodity commodity) {
     return InkWell(
-      child: Card(
-        child: ListTile(
-          image: DecorationImage(
-                          AssetImage('assets/' + commodity.name + '.jpg'),
-                          size: 56.0)),
-          title: Text(
-            commodity.name,
-            style: _biggerFont,
-          ),
-          subtitle: Text(
-            '库存件数：' + commodity.quantity.toString(),
-            style: _normalFont,
-          ),
-          trailing: Icon(Icons.arrow_forward_ios),
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => DetailPage(detailData: commodity)));
-          },
+        child: Card(
+      child: ListTile(
+        leading: CircleAvatar(
+            backgroundImage: AssetImage("assets/${commodity.name}.jpg")),
+        title: Text(
+          commodity.name,
+          style: _biggerFont,
         ),
+        subtitle: Text(
+          '库存件数：' + commodity.quantity.toString(),
+          style: _normalFont,
+        ),
+        trailing: Icon(Icons.arrow_forward_ios),
+        onTap: () {
+          Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => DetailPage(detailData: commodity)));
+        },
       ),
-      /*ListTile(
+    )
+        /*ListTile(
           onTap: () {
             //Scaffold.of(context).showSnackBar(SnackBar(
             //  content: Text('Tap'),
@@ -188,6 +189,6 @@ class _ListPageState extends State<ListPage> {
             style: _normalFont,
           ),
         ),*/
-    );
+        );
   }
 }
