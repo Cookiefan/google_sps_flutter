@@ -4,62 +4,59 @@ import 'http_util.dart';
 import 'detailPage.dart';
 
 void main() => runApp(MyApp());
-List recentList = [];
-List searchList = [];
-var resultList = [];
-Map resultMap = {};
-IOHttpUtils _ioHttpUtils = new IOHttpUtils();
-
-getAllData() async {
-  await _ioHttpUtils.sendDataGet();
-  resultList = _ioHttpUtils.getDataList();
-}
-
-updateData() {
-  searchList.clear();
-  for (var result in resultList) {
-    searchList.add(result["name"]);
-    resultMap[result["name"]] = Commodity(result["name"], result["number"]);
-  }
-  print("search: $searchList");
-}
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'search',
-      home: SearchBar(),
     );
   }
 }
 
-class SearchBar extends StatefulWidget {
-  @override
-  _SearchBarState createState() => _SearchBarState();
-}
+// class SearchBar extends StatefulWidget {
+//   @override
+//   _SearchBarState createState() => _SearchBarState();
+// }
 
-class _SearchBarState extends State<SearchBar> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('SearchBar'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              getAllData();
-              showSearch(context: context, delegate: SearchBarDelegate());
-            },
-          ),
-        ],
-      ),
-    );
-  }
-}
+// class _SearchBarState extends State<SearchBar> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: Text('SearchBar'),
+//         actions: <Widget>[
+//           IconButton(
+//             icon: Icon(Icons.search),
+//             onPressed: () {
+//               getAllData();
+//               showSearch(context: context, delegate: SearchBarDelegate());
+//             },
+//           ),
+//         ],
+//       ),
+//     );
+//   }
+// }
 
 class SearchBarDelegate extends SearchDelegate<String> {
+  var resultList;
+  List recentList = [];
+  List searchList = [];
+  Map resultMap = {};
+
+  updateData() {
+    this.searchList.clear();
+    for (var result in this.resultList) {
+      this.searchList.add(result["name"]);
+      this.resultMap[result["name"]] =
+          Commodity(result["name"], result["number"]);
+    }
+    print("update searchList: $searchList");
+  }
+
+  SearchBarDelegate(this.resultList);
+
   @override
   List<Widget> buildActions(BuildContext context) {
     return [
