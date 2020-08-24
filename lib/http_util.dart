@@ -16,32 +16,51 @@ class IOHttpUtils {
   }
 
   // 发送data的http请求，请求结果json会放到_dataList中，调用getDataList()方法获取
-  sendDataGet() async {
+  Future<List<Map>> sendDataGet() async {
     HttpClient _httpClient = HttpClient();
     var url = "https://ymao-sps-summer20.appspot.com/data/";
-    return await _httpClient
-        .getUrl(Uri.parse(url))
-        .then((HttpClientRequest request) {
-      return request.close();
-    }).then((HttpClientResponse response) {
-      if (response.statusCode == 200) {
-        response.transform(utf8.decoder).join().then((String string) {
-          print("get data success!");
-          return json.decode(string);
-        }).then((rspData) {
-          assert(rspData is List);
-          _dataList.clear();
-          for (var item in rspData) {
-            assert(item is Map);
-            _dataList.add(item);
-          }
-        });
-      } else {
-        print("error");
+    var request = await _httpClient.getUrl(Uri.parse(url));
+    var response = await request.close();
+    if (response.statusCode == 200){
+      var string = await response.transform(utf8.decoder).join();
+      var rspData = json.decode(string);
+      assert(rspData is List);
+      _dataList.clear();
+      for (var item in rspData) {
+        assert(item is Map);
+        _dataList.add(item);
       }
-      return _dataList;
-    });
+      print("get data success!");
+    }
+    return _dataList;
   }
+
+//  Future<List<Map>> sendDataGet() async {
+//    HttpClient _httpClient = HttpClient();
+//    var url = "https://ymao-sps-summer20.appspot.com/data/";
+//    await _httpClient
+//        .getUrl(Uri.parse(url))
+//        .then((HttpClientRequest request) {
+//      return request.close();
+//    }).then((HttpClientResponse response) {
+//      if (response.statusCode == 200) {
+//        response.transform(utf8.decoder).join().then((String string) {
+//          print("get data success!");
+//          return json.decode(string);
+//        }).then((rspData) {
+//          assert(rspData is List);
+//          _dataList.clear();
+//          for (var item in rspData) {
+//            assert(item is Map);
+//            _dataList.add(item);
+//          }
+//        });
+//      } else {
+//        print("error");
+//      }
+//      return _dataList;
+//    });
+//  }
 
   //search请求用这个
   sendSearchGet() async {
