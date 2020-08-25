@@ -50,7 +50,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
     for (var result in this.resultList) {
       this.searchList.add(result["name"]);
       this.resultMap[result["name"]] =
-          Commodity(result["name"], result["number"]);
+          Commodity(result["name"], result["number"], price: result["price"]);
     }
     print("update searchList: $searchList");
   }
@@ -96,7 +96,7 @@ class SearchBarDelegate extends SearchDelegate<String> {
             context,
             MaterialPageRoute(
                 builder: (context) => DetailPage(
-                      detailData: Commodity('abc', 1),
+                      detailData: resultMap[query],
                     )));
       },
     ));

@@ -1,13 +1,12 @@
 class Commodity {
   String name;
   int quantity;
+  double price;
 
-  Commodity(String s, int q) {
-    this.name = s;
-    this.quantity = q;
-  }
+  Commodity(this.name, this.quantity, {this.price = 100});
+
   @override
   String toString() {
-    return 'Commodity{name: $name, quantity: $quantity}';
+    return 'Commodity{name: $name, quantity: $quantity, price: $price}';
   }
 }

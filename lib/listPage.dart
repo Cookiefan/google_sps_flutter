@@ -58,8 +58,9 @@ class _ListPageState extends State<ListPage> {
               resultList = _ioHttpUtils.getDataList();
               _suggestions.clear();
               for (var commodity in resultList) {
-                _suggestions
-                    .add(Commodity(commodity["name"], commodity["number"]));
+                _suggestions.add(Commodity(
+                    commodity["name"], commodity["number"],
+                    price: commodity["price"]));
               }
               return _buildList();
             } else {
