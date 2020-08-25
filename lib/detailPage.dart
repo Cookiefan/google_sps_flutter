@@ -84,7 +84,7 @@ class _DetailPageState extends State<DetailPage> {
                         new Padding(padding: EdgeInsets.only(top: 10.0)),
                         Container(
                           padding: EdgeInsets.only(left: 10.0),
-                          height: MediaQuery.of(context).size.height * 0.2,
+                          height: MediaQuery.of(context).size.height * 0.3,
                           decoration: BoxDecoration(
                               image: DecorationImage(
                                   image: AssetImage(
