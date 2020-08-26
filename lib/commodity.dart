@@ -1,12 +1,17 @@
 class Commodity {
+  int itemId;
   String name;
   int quantity;
   double price;
 
-  Commodity(this.name, this.quantity, {this.price = 100});
+  Commodity(this.itemId, this.name, this.quantity, {this.price = 100});
 
   @override
   String toString() {
-    return 'Commodity{name: $name, quantity: $quantity, price: $price}';
+    return 'Commodity{item_id: $itemId, name: $name, quantity: $quantity, price: $price}';
+  }
+
+  String getImgName() {
+    return name.split('\t')[0];
   }
 }

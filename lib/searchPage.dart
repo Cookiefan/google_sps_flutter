@@ -49,8 +49,9 @@ class SearchBarDelegate extends SearchDelegate<String> {
     this.searchList.clear();
     for (var result in this.resultList) {
       this.searchList.add(result["name"]);
-      this.resultMap[result["name"]] =
-          Commodity(result["name"], result["number"], price: result["price"]);
+      this.resultMap[result["name"]] = Commodity(
+          result["item_id"], result["name"], result["number"],
+          price: result["price"]);
     }
     print("update searchList: $searchList");
   }

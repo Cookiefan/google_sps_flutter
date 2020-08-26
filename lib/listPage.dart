@@ -58,7 +58,7 @@ class _ListPageState extends State<ListPage> {
               resultList = _ioHttpUtils.getDataList();
               _suggestions.clear();
               for (var commodity in resultList) {
-                _suggestions.add(Commodity(
+                _suggestions.add(Commodity(commodity["item_id"],
                     commodity["name"], commodity["number"],
                     price: commodity["price"]));
               }
@@ -140,15 +140,16 @@ class _ListPageState extends State<ListPage> {
         }),
       ),
     );
-    return ListView.builder(
-        padding: EdgeInsets.all(16.0),
-        itemCount: _suggestions.length * 2,
-        itemBuilder: /*1*/ (context, i) {
-          if (i.isOdd) return Divider(); /*2*/
+    // print("!!!");
+    // return ListView.builder(
+    //     padding: EdgeInsets.all(16.0),
+    //     itemCount: _suggestions.length * 2,
+    //     itemBuilder: /*1*/ (context, i) {
+    //       if (i.isOdd) return Divider(); /*2*/
 
-          final index = i ~/ 2; /*3*/
-          return _buildRow(_suggestions[index]);
-        });
+    //       final index = i ~/ 2; /*3*/
+    //       return _buildRow(_suggestions[index]);
+    //     });
   }
 
   Widget _buildRow(Commodity commodity) {
@@ -156,13 +157,14 @@ class _ListPageState extends State<ListPage> {
         child: Card(
       child: ListTile(
         leading: CircleAvatar(
-            backgroundImage: AssetImage("assets/${commodity.name}.jpg")),
+            backgroundImage:
+                AssetImage("assets/${commodity.getImgName()}.jpg")),
         title: Text(
           commodity.name,
           style: _biggerFont,
         ),
         subtitle: Text(
-          '库存件数：' + commodity.quantity.toString(),
+          'quantity：' + commodity.quantity.toString(),
           style: _normalFont,
         ),
         trailing: Icon(Icons.arrow_forward_ios),
